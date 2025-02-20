@@ -398,4 +398,8 @@ function M.attach(client, bufnr)
 	lib.request_symbol(bufnr, lsp_callback, client)
 end
 
+M.get_config = function()
+	return config
+end
+
 return M
