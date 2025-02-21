@@ -311,7 +311,7 @@ function M.format_data(data, opts)
 	end
 
 	for i, v in ipairs(data) do
-        if local_config.valid_symbols[v.kind] then
+        if not local_config.valid_symbols[v.type] then
             goto continue
         end
 		local name = ""
