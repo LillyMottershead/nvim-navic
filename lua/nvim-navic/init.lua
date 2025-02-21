@@ -6,7 +6,9 @@ local lib = require("nvim-navic.lib")
 
 ---@class Options
 ---@field icons table | nil
+---@field valid_symbols table | nil
 ---@field highlight boolean | nil
+---@field separator string | nil
 ---@field format_text function | nil
 ---@field depth_limit number | nil
 ---@field depth_limit_indicator string | nil
@@ -50,6 +52,35 @@ local config = {
 		[26] = "󰊄 ", -- TypeParameter
 		[255] = "󰉨 ", -- Macro
 	},
+    valid_symbols = {
+        "File",
+        "Module",
+        "Namespace",
+        "Package",
+        "Class",
+        "Method",
+        "Property",
+        "Field",
+        "Constructor",
+        "Enum",
+        "Interface",
+        "Function",
+        "Variable",
+        "Constant",
+        "String",
+        "Number",
+        "Boolean",
+        "Array",
+        "Object",
+        "Key",
+        "Null",
+        "EnumMember",
+        "Struct",
+        "Event",
+        "Operator",
+        "TypeParameter",
+        "Macro",
+    },
 	highlight = false,
 	separator = " > ",
 	depth_limit = 0,
@@ -129,6 +160,13 @@ function M.setup(opts)
 		end
 	end
 
+    if opts.valid_symbols ~= nil then
+        config.valid_symbols = {}
+        for v in pairs(opts.valid_symbols) do
+            config.valid_symbols[v] = true
+        end
+    end
+
 	if opts.separator ~= nil then
 		config.separator = opts.separator
 	end
@@ -205,6 +243,13 @@ function M.format_data(data, opts)
 			end
 		end
 
+        if opts.valid_symbols ~= nil then
+            local_config.valid_symbols = {}
+            for v in pairs(opts.valid_symbols) do
+                local_config.valid_symbols[v] = true
+            end
+        end
+
 		if opts.separator ~= nil then
 			local_config.separator = opts.separator
 		end
@@ -266,6 +311,9 @@ function M.format_data(data, opts)
 	end
 
 	for i, v in ipairs(data) do
+        if local_config.valid_symbols[v.kind] then
+            goto continue
+        end
 		local name = ""
 
 		if local_config.safe_output then
@@ -288,6 +336,7 @@ function M.format_data(data, opts)
 		end
 
 		table.insert(location, component)
+        ::continue::
 	end
 
 	if local_config.depth_limit ~= 0 and #location > local_config.depth_limit then
