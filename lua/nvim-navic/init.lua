@@ -162,7 +162,7 @@ function M.setup(opts)
 
     if opts.valid_symbols ~= nil then
         config.valid_symbols = {}
-        for v in pairs(opts.valid_symbols) do
+        for _, v in ipairs(opts.valid_symbols) do
             config.valid_symbols[v] = true
         end
     end
@@ -245,7 +245,7 @@ function M.format_data(data, opts)
 
         if opts.valid_symbols ~= nil then
             local_config.valid_symbols = {}
-            for v in pairs(opts.valid_symbols) do
+            for _, v in ipairs(opts.valid_symbols) do
                 local_config.valid_symbols[v] = true
             end
         end
